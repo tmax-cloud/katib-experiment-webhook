@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mutate-server
+  namespace: mutate-webhook
+spec:
+  selector:
+    matchLabels:
+      app: mutate-server
+  template:
+    metadata:
+      labels:
+        app: mutate-server
+    spec:
+      containers:
+      - name: mutate-server
+        image: init-container-injector:0.1.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: webhook-certs
+            mountPath: /etc/webhook/certs
+            readOnly: true
+          - name: initcontainer-config
+            mountPath: /etc/webhook/config
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: webhook-certs
+        - name: initcontainer-config
+          configMap:
+            name: initcontainer-config
