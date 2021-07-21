@@ -11,7 +11,7 @@ import (
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"	
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	expev1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1.Experiment"
+	expev1 "github.com/kubeflow/katib/pkg/apis/v1beta1"
 
 	"net/http"
 

@@ -23,24 +23,17 @@ func main() {
 	// get CLI Parameters
 	flag.IntVar(&parameters.port, "port", 8080, "Webhook Server Port")
 	flag.StringVar(&parameters.certFile, "tlsCertFile", "/etc/webhook/certs/tls.crt", "x509 Certificate File for HTTPS")
-	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "/etc/webhook/certs/tls.key", "x509 Certificate Private Key")
-	flag.StringVar(&parameters.initContainerConfigFile, "initContainerConfig", "/etc/webhook/config/init-container.yaml", "Mutation Configuration File")
+	flag.StringVar(&parameters.keyFile, "tlsKeyFile", "/etc/webhook/certs/tls.key", "x509 Certificate Private Key")	
 
 	flag.Parse()
-
-	// read init container configuration
-	initContainerConfig, err := loadConfig(parameters.initContainerConfigFile)
-	if err != nil {
-		log.Exit(2)
-	}
+	
 
 	pair, err := tls.LoadX509KeyPair(parameters.certFile, parameters.keyFile)
 	if err != nil {
 		log.Errorf("Failed to load key pair : %v", err)
 	}
 
-	webhookServer := WebhookServer{
-		initContainerConfig: initContainerConfig,
+	webhookServer := WebhookServer{		
 		server: &http.Server{
 			Addr: fmt.Sprintf(":%v", parameters.port),
 			TLSConfig: &tls.Config{
@@ -72,20 +65,3 @@ func main() {
 	webhookServer.server.Shutdown(context.Background())
 }
 
-func loadConfig(configFilePath string) (*Config, error) {
-	data, err := ioutil.ReadFile(configFilePath)
-	if err != nil {
-		log.Errorf("Failed to Load Init Container Configuration : %s", err)
-		return nil, err
-	}
-
-	log.Infof("New configuration: sha256sum %x", sha256.Sum256(data))
-
-	var config Config
-	if err := yaml.Unmarshal(data, &config); err != nil {
-		log.Errorf("Failed to Read Init Container Configuration : %s", err)
-		return nil, err
-	}
-
-	return &config, nil
-}
