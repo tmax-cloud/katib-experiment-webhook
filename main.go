@@ -16,8 +16,8 @@ import (
 
 	"k8s.io/api/admission/v1beta1"
 
-	admission "hypercloud-webhook/admission"
-	audit "hypercloud-webhook/audit"
+	admission "experiment-webhook/admission"
+	audit "experiment-webhook/audit"
 )
 
 type admitFunc func(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse

@@ -1,18 +1,16 @@
 package admission
 
 import (
-	"context"
+	//"context"
 	"encoding/json"
 	"fmt"
-	"strconv"
-	//"runtime/debug"
-	wfv1 "github.com/argoproj/argo/v2/pkg/apis/workflow/v1alpha1"
-	//wfv1 "github.com/argoproj/argo-workflows/pkg/apis/workflow/v1alpha1"
-	"k8s.io/apimachinery/pkg/api/errors"
+	//"strconv"
+	//"runtime/debug"	
+	//"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/api/admission/v1beta1"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	rbacv1 "k8s.io/api/rbac/v1"
+	//corev1 "k8s.io/api/core/v1"
+	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	//rbacv1 "k8s.io/api/rbac/v1"
 	experimentsv1beta1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1"
 	"k8s.io/klog"
 	"k8s.io/client-go/kubernetes"
@@ -45,7 +43,7 @@ func trialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResp
 
 	var patch []patchOps
 	
-	if len(ms.Spec.TrialTemplate.TrialSpec.Spec.Template.Metadata.Annotations) == 0 {		
+	if len(ms.Spec.trialTemplate.trialSpec.spec.template.metadata.annotations) == 0 {		
 			createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/spec/template/metadata/annotations", annotationInject)
 	}
 
