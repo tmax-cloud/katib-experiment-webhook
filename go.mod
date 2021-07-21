@@ -1,15 +1,16 @@
-module github.com/seongpyoHong/init-container-injector
+module hypercloud-webhook
 
-go 1.15
+go 1.13
 
 require (
-	github.com/kubeflow/katib v0.11.0+incompatible
-	github.com/google/go-cmp v0.5.5 // indirect
-	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/sirupsen/logrus v1.8.1
-	golang.org/x/net v0.0.0-20210423184538-5f58ad60dda6 // indirect
-	gopkg.in/yaml.v2 v2.4.0
-	k8s.io/api v0.21.0
-	k8s.io/apimachinery v0.21.0
-	sigs.k8s.io/structured-merge-diff/v4 v4.1.1 // indirect
+	github.com/kubeflow/katib v0.11.1
+	github.com/go-sql-driver/mysql v1.6.0
+	github.com/google/uuid v1.2.0
+	github.com/gorilla/websocket v1.4.2
+	github.com/lib/pq v1.10.0
+	k8s.io/api v0.20.5
+	k8s.io/apimachinery v0.20.5
+	k8s.io/apiserver v0.20.5
+	k8s.io/client-go v0.20.5
+	k8s.io/klog v1.0.0
 )

@@ -1,13 +1,7 @@
-FROM  golang:1.15-buster as builder
+FROM golang:1.13-alpine
 
-WORKDIR /tmp/tiny-golang-image
-COPY cmd ./cmd/
-COPY go.mod .
-COPY go.sum .
-
-RUN go mod tidy && go get -u -d -v ./...
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-s -w' -o main ./cmd/
-
-FROM scratch
-COPY --from=builder /tmp/tiny-golang-image /
-ENTRYPOINT ["/main"]
+WORKDIR /usr/src/app
+COPY . .
+RUN apk add --no-cache bash
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-s' -o main .
+ENTRYPOINT ["/usr/src/app/start.sh"]

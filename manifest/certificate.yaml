@@ -1,0 +1,30 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: selfsigned-cert-example
+  namespace: kubeflow
+  labels:
+    some-annotation: "true"
+spec:
+  secretName: hypercloud-workflow-webhook-certs
+  duration: 2880h
+  renewBefore: 360h
+  dnsNames:
+    - hypercloud-workflow-webhook-svc.kubeflow.svc
+    - hypercloud-workflow-webhook-svc.kubeflow.svc.cluster.local
+    - hypercloud-workflowtemplate-webhook-svc.kubeflow.svc
+    - hypercloud-workflowtemplate-webhook-svc.kubeflow.svc.cluster.local
+    - hypercloud-workflow-webhook-svc
+    - hypercloud-workflowtemplate-webhook-svc
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: ck-selfsigned-clusterissuer
+    kind: ClusterIssuer
+    group: cert-manager.io
