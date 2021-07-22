@@ -5,20 +5,35 @@ metadata:
   annotations:
     cert-manager.io/inject-ca-from: kubeflow/katib-experiment-webhook-cert
 webhooks:
-  - admissionReviewVersions:
-      - v1beta1      
-    name: katib-experiment-webhook-svc.kubeflow.svc
-    clientConfig:
-      caBundle: ${CA_BUNDLE}
-      service:
-        name: trainedmodel-webhook-svc
-        namespace: kubeflow
-        path: /api/webhook/add-annotation/experiment 
-        port: 443
-    rules:
-      - apiGroups: [ "kubeflow.org" ]
-        apiVersions: [ "v1beta1" ]
-        resources: [ "experiments" ]
-        operations: [ "CREATE", "UPDATE" ]
-        scope: '*'
-    sideEffects: None
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: katib-experiment-webhook-svc
+      namespace: kubeflow
+      path: /api/webhook/add-annotation/experiment 
+      port: 443
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: katib-experiment-webhook-svc.kubeflow.svc
+  namespaceSelector:
+    matchExpressions:
+    - key: experiment-webhook
+      operator: NotIn
+      values:
+      - "false"
+  objectSelector: {}
+  reinvocationPolicy: Never
+  rules:
+  - apiGroups:
+    - kubeflow.org
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - experiments
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10
