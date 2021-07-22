@@ -16,8 +16,8 @@ import (
 
 	"k8s.io/api/admission/v1beta1"
 
-	admission "experiment-webhook/admission"
-	audit "experiment-webhook/audit"
+	admission "hypercloud-webhook/admission"
+	audit "hypercloud-webhook/audit"
 )
 
 type admitFunc func(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse
@@ -65,7 +65,7 @@ func serve(w http.ResponseWriter, r *http.Request, admit admitFunc) {
 
 func serveExperiment(w http.ResponseWriter, r *http.Request) {
 	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.WorkflowSACheck)
+	serve(w, r, admission.TrialSpecAnnotationCheck)
 }
 
 func serveAudit(w http.ResponseWriter, r *http.Request) {

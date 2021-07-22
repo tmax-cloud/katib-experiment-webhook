@@ -13,54 +13,42 @@ import (
 	//rbacv1 "k8s.io/api/rbac/v1"
 	experimentsv1beta1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1"
 	"k8s.io/klog"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 )
 
-func trialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
-	reviewResponse := v1beta1.AdmissionResponse{}
+func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+		reviewResponse := v1beta1.AdmissionResponse{}
 
-	fmt.Println("check for enter experiment handler")
+		fmt.Println("check for enter experiment handler")
 
-	ms := experimentsv1beta1.Experiment{}
+		ms := experimentsv1beta1.Experiment{}
     
-	if err := json.Unmarshal(ar.Request.Object.Raw, &ms); err != nil {
-		return ToAdmissionResponse(err) //msg: error
-	}
-	nsofexperiment := ms.ObjectMeta.Namespace
+		if err := json.Unmarshal(ar.Request.Object.Raw, &ms); err != nil {
+			return ToAdmissionResponse(err) //msg: error
+		}
+		nsofexperiment := ms.ObjectMeta.Namespace
 
-	klog.Infof("experiment created in namespace : %s", nsofexperiment)
+		klog.Infof("experiment created in namespace : %s", nsofexperiment)
 		
-	annotationInject := "sidecar.istio.io/inject: false"
-	config1, err := rest.InClusterConfig()
-	if err != nil {
-		panic(err.Error())
-	}
-	client1, err := kubernetes.NewForConfig(config1)
-	if err != nil{
-		panic(err.Error())
-	}
+		annotationInject := "sidecar.istio.io/inject: false"
 
-	var patch []patchOps
-	
-	if len(ms.Spec.trialTemplate.trialSpec.spec.template.metadata.annotations) == 0 {		
+		var patch []patchOps
 			createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/spec/template/metadata/annotations", annotationInject)
-	}
 
 	//klog.Infof("check data for ms.Spec : %s", ms.Spec)
 
-	if patchData, err := json.Marshal(patch); err != nil {
-		return ToAdmissionResponse(err) //msg: error
-	} else {
-		klog.Infof("JsonPatch=%s", string(patchData))
-		reviewResponse.Patch = patchData
-	}
+		if patchData, err := json.Marshal(patch); err != nil {
+			return ToAdmissionResponse(err) //msg: error
+		} else {
+			klog.Infof("JsonPatch=%s", string(patchData))
+			reviewResponse.Patch = patchData
+		}
 
 	// v1beta1 pkg에 저장된 patchType (const string)을 Resp에 저장
-	pt := v1beta1.PatchTypeJSONPatch
-	reviewResponse.PatchType = &pt
-	reviewResponse.Allowed = true
+		pt := v1beta1.PatchTypeJSONPatch
+		reviewResponse.PatchType = &pt
+		reviewResponse.Allowed = true
 
-	return &reviewResponse
+		return &reviewResponse
 
 }
+

@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    hypercloud: workflow-webhook
-  name: hypercloud-workflow-webhook-svc
+    hypercloud: experiment-webhook
+  name: katib-experiment-webhook-svc
   namespace: kubeflow
 spec:
   ports:
@@ -11,23 +11,7 @@ spec:
     protocol: TCP
     targetPort: webhook
   selector:
-    hypercloud: workflow-webhook
+    hypercloud: experiment-webhook
   sessionAffinity: None
   type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    hypercloud: workflow-webhook
-  name: hypercloud-workflowtemplate-webhook-svc
-  namespace: kubeflow
-spec:
-  ports:
-  - port: 443
-    protocol: TCP
-    targetPort: webhook
-  selector:
-    hypercloud: workflow-webhook
-  sessionAffinity: None
-  type: ClusterIP
+

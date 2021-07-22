@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   generation: 1
   labels:
-    hypercloud: workflow-webhook
-  name: hypercloud-workflow-webhook
+    hypercloud: experiment-webhook
+  name: katib-experiment-webhook
   namespace: kubeflow
 spec:
   progressDeadlineSeconds: 600
@@ -12,7 +12,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      hypercloud: workflow-webhook
+      hypercloud: experiment-webhook
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -22,16 +22,16 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        hypercloud: workflow-webhook
+        hypercloud: experiment-webhook
     spec:
-      serviceAccountName: default
+      serviceAccountName: katib-experiment-reader
       containers:
       - env:
         - name: TZ
           value: Asia/Seoul
-        image: atcham/test:v2.3.10
+        image: kitaeyoo777/ex-test:test
         imagePullPolicy: Always
-        name: hypercloud-workflow-webhook
+        name: katib-experiment-webhook
         ports:
         - containerPort: 8443
           name: webhook
@@ -47,7 +47,7 @@ spec:
         terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /run/secrets/tls
-          name: hypercloud-workflow-webhook-certs
+          name: katib-experiement-webhook-tls
           readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -55,7 +55,7 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: hypercloud-workflow-webhook-certs
+      - name: katib-experiement-webhook-tls
         secret:
           defaultMode: 420
-          secretName: hypercloud-workflow-webhook-certs
+          secretName: katib-experiement-webhook-tls

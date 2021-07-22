@@ -1,71 +1,24 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: hypercloud-workflow-webhook-mutator
+  name: katib-experiment-webhook-mutator
   annotations:
-    cert-manager.io/inject-ca-from: argo/selfsigned-cert-example
+    cert-manager.io/inject-ca-from: kubeflow/katib-experiment-webhook-cert
 webhooks:
-- admissionReviewVersions:
-  - v1beta1
-  clientConfig:
-    service:
-      name: hypercloud-workflow-webhook-svc
-      namespace: kubeflow
-      path: /api/webhook/add-serviceaccount/workflow 
-      port: 443
-  failurePolicy: Fail
-  matchPolicy: Equivalent
-  name: hypercloud-workflow-webhook-svc.kubeflow.svc
-  namespaceSelector:
-    matchExpressions:
-    - key: workflow-webhook
-      operator: NotIn
-      values:
-      - "false"
-  objectSelector: {}
-  reinvocationPolicy: Never
-  rules:
-  - apiGroups:
-    - argoproj.io
-    apiVersions:
-    - v1alpha1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - workflows
-    scope: '*'
-  sideEffects: None
-  timeoutSeconds: 10
-- admissionReviewVersions:
-  - v1beta1
-  clientConfig:
-    service:
-      name: hypercloud-workflowtemplate-webhook-svc
-      namespace: kubeflow
-      path: /api/webhook/add-serviceaccount/workflowtemplate
-      port: 443
-  failurePolicy: Fail
-  matchPolicy: Equivalent
-  name: hypercloud-workflowtemplate-webhook-svc.kubeflow.svc
-  namespaceSelector:
-    matchExpressions:
-    - key: workflow-webhook
-      operator: NotIn
-      values:
-      - "false"
-  objectSelector: {}
-  reinvocationPolicy: Never
-  rules:
-  - apiGroups:
-    - argoproj.io
-    apiVersions:
-    - v1alpha1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - workflowtemplates
-    scope: '*'
-  sideEffects: None
-  timeoutSeconds: 10
+  - admissionReviewVersions:
+      - v1beta1      
+    name: katib-experiment-webhook-svc.kubeflow.svc
+    clientConfig:
+      caBundle: ${CA_BUNDLE}
+      service:
+        name: trainedmodel-webhook-svc
+        namespace: kubeflow
+        path: /api/webhook/add-annotation/experiment 
+        port: 443
+    rules:
+      - apiGroups: [ "kubeflow.org" ]
+        apiVersions: [ "v1beta1" ]
+        resources: [ "experiments" ]
+        operations: [ "CREATE", "UPDATE" ]
+        scope: '*'
+    sideEffects: None

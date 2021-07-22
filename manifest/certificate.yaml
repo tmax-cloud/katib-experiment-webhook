@@ -1,21 +1,18 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: selfsigned-cert-example
+  name: katib-experiment-webhook-cert
   namespace: kubeflow
   labels:
     some-annotation: "true"
 spec:
-  secretName: hypercloud-workflow-webhook-certs
+  secretName: katib-experiement-webhook-tls
   duration: 2880h
   renewBefore: 360h
   dnsNames:
-    - hypercloud-workflow-webhook-svc.kubeflow.svc
-    - hypercloud-workflow-webhook-svc.kubeflow.svc.cluster.local
-    - hypercloud-workflowtemplate-webhook-svc.kubeflow.svc
-    - hypercloud-workflowtemplate-webhook-svc.kubeflow.svc.cluster.local
-    - hypercloud-workflow-webhook-svc
-    - hypercloud-workflowtemplate-webhook-svc
+    - katib-experiment-webhook-svc.kubeflow.svc
+    - katib-experiment-webhook-svc.kubeflow.svc.cluster.local    
+    - katib-experiment-webhook-svc    
   privateKey:
     algorithm: RSA
     encoding: PKCS1
