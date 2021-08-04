@@ -4,6 +4,7 @@ import (
 	//"context"
 	"encoding/json"
 	"fmt"
+	//"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	//"strconv"
 	//"runtime/debug"	
 	//"k8s.io/apimachinery/pkg/api/errors"
@@ -11,7 +12,7 @@ import (
 	//corev1 "k8s.io/api/core/v1"
 	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	//rbacv1 "k8s.io/api/rbac/v1"
-	experimentsv1beta1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1"
+	experimentsv1beta1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1"	
 	"k8s.io/klog"
 )
 
@@ -20,7 +21,7 @@ func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResp
 
 		fmt.Println("check for enter experiment handler")
 
-		ms := experimentsv1beta1.Experiment{}
+		ms := experimentsv1beta1.Experiment{}		
     
 		if err := json.Unmarshal(ar.Request.Object.Raw, &ms); err != nil {
 			return ToAdmissionResponse(err) //msg: error
@@ -30,9 +31,17 @@ func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResp
 		klog.Infof("experiment created in namespace : %s", nsofexperiment)
 		
 		annotationInject := "sidecar.istio.io/inject: false"
-
+		kind := ms.Spec.TrialTemplate.TrialSpec.GetKind()
 		var patch []patchOps
-			createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/spec/template/metadata/annotations", annotationInject)
+		if kind == "job"{			
+				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/spec/template/metadata/annotations", annotationInject)
+			} else if kind == "pytorchjob"{					  					
+				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/pytorchReplicaSpecs/Worker/template/metadata/annotations", annotationInject)
+				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/pytorchReplicaSpecs/Master/template/metadata/annotations", annotationInject)
+			} else if kind == "tfjob"{								
+				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/tfReplicaSpecs/PS/template/metadata/annotations", annotationInject)
+				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/tfReplicaSpecs/Worker/template/metadata/annotations", annotationInject)
+			}		
 
 	//klog.Infof("check data for ms.Spec : %s", ms.Spec)
 
