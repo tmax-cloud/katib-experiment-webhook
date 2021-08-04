@@ -12,8 +12,8 @@ import (
 	//corev1 "k8s.io/api/core/v1"
 	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	//rbacv1 "k8s.io/api/rbac/v1"
-	experimentsv1beta1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1"	
-	"k8s.io/klog"
+	experimentsv1beta1 "github.com/kubeflow/katib/pkg/apis/controller/experiments/v1beta1"		
+	"k8s.io/klog"	
 )
 
 func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
@@ -30,18 +30,42 @@ func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResp
 
 		klog.Infof("experiment created in namespace : %s", nsofexperiment)
 		
-		annotationInject := "sidecar.istio.io/inject: false"
+		
 		kind := ms.Spec.TrialTemplate.TrialSpec.GetKind()
-		var patch []patchOps
-		if kind == "job"{			
+
+		annotationcheck := ms.Spec.TrialTemplate.TrialSpec.GetAnnotations()
+
+		annotationInject := "sidecar.istio.io/inject: false"
+
+		am := map[string]string{
+			"sidecar.istio.io/inject": "false",			
+		}
+
+		klog.Infof("kind is : %s", kind)
+
+		var patch []patchOps												
+
+		if kind == "Job"{
+			if annotationcheck == nil{
+				ms.Spec.TrialTemplate.TrialSpec.SetAnnotations(am)
+			} else{
 				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/spec/template/metadata/annotations", annotationInject)
-			} else if kind == "pytorchjob"{					  					
+			}
+		} else if kind == "PyTorchJob"{
+			if annotationcheck == nil{
+				ms.Spec.TrialTemplate.TrialSpec.SetAnnotations(am)
+			} else{
 				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/pytorchReplicaSpecs/Worker/template/metadata/annotations", annotationInject)
 				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/pytorchReplicaSpecs/Master/template/metadata/annotations", annotationInject)
-			} else if kind == "tfjob"{								
+			}			  					
+		} else if kind == "TFJob"{
+			if annotationcheck == nil{
+				ms.Spec.TrialTemplate.TrialSpec.SetAnnotations(am)
+			} else{
 				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/tfReplicaSpecs/PS/template/metadata/annotations", annotationInject)
 				createPatch(&patch, "add", "/spec/trialTemplate/trialSpec/tfReplicaSpecs/Worker/template/metadata/annotations", annotationInject)
-			}		
+			}							
+		}		
 
 	//klog.Infof("check data for ms.Spec : %s", ms.Spec)
 
