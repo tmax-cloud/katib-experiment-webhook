@@ -6,7 +6,7 @@ metadata:
   labels:
     some-annotation: "true"
 spec:
-  secretName: katib-experiement-webhook-tls
+  secretName: katib-job-webhook-tls
   duration: 2880h
   renewBefore: 360h
   dnsNames:
