@@ -10,7 +10,7 @@ metadata:
   name: job-reader
 rules:
   - apiGroups: [ "batch" ]
-    resources: [ "job" ]
+    resources: [ "jobs" ]
     verbs: [ "get", "list", "watch", "update" ]
   - apiGroups: [ "" ]
     resources: [ "configmaps", "pods" ]

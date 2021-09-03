@@ -27,9 +27,13 @@ func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResp
 		if err := json.Unmarshal(ar.Request.Object.Raw, &job); err != nil {
 			return ToAdmissionResponse(err) //msg: error		
 		}
+		jobns := job.ObjectMeta.Namespace
+
+		klog.Infof("job is created in ns : %s", jobns)
 	
 		owners := job.GetOwnerReferences()
 
+		klog.Infof("job owner : %s", owners)
 		//jobKind := ""
 		//jobName := ""
 		// Search for Trial owner in object owner references
@@ -41,19 +45,21 @@ func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResp
 			"sidecar.istio.io/inject": "false",			
 		}
 
+		jobName := ""
+
 		for _, owner := range owners {
 			if owner.Kind == "Trial" && owner.APIVersion == "kubeflow.org/v1beta1" {
-				createPatch(&patch, "add", "/spec/Template/metadata/annotations", am)
-			}
-		}			
-
-		// klog.Infof("job created in namespace : %s", jobNamespace)
-				
+				jobName = job.GetName()
+			} 
+		}
 		
-	
+		klog.Infof("job name : %s", jobName)
 
+		if jobName != "" {
+			createPatch(&patch, "add", "/spec/template/metadata/annotations", am)
+		}
 
-	//klog.Infof("check data for ms.Spec : %s", ms.Spec)
+		
 
 		if patchData, err := json.Marshal(patch); err != nil {
 			return ToAdmissionResponse(err) //msg: error

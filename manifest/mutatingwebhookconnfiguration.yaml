@@ -33,7 +33,7 @@ webhooks:
     - CREATE
     - UPDATE
     resources:
-    - job
+    - jobs
     scope: '*'
   sideEffects: None
   timeoutSeconds: 10
