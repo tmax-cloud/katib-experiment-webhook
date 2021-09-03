@@ -15,6 +15,7 @@ require (
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/klog v1.0.0
 	k8s.io/kubernetes v1.16.2
+	sigs.k8s.io/controller-runtime v0.8.2
 	volcano.sh/volcano v0.4.0
 )
 
