@@ -58,4 +58,4 @@ spec:
       - name: katib-job-webhook-tls
         secret:
           defaultMode: 420
-          secretName: katib-experiement-webhook-tls
+          secretName: katib-job-webhook-tls
