@@ -12,7 +12,10 @@ spec:
   dnsNames:
     - katib-job-webhook-svc.kubeflow.svc
     - katib-job-webhook-svc.kubeflow.svc.cluster.local    
-    - katib-job-webhook-svc    
+    - katib-job-webhook-svc   
+    - katib-tfjob-webhook-svc.kubeflow.svc
+    - katib-tfjob-webhook-svc.kubeflow.svc.cluster.local    
+    - katib-tfjob-webhook-svc     
   privateKey:
     algorithm: RSA
     encoding: PKCS1

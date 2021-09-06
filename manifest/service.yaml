@@ -14,4 +14,20 @@ spec:
     hypercloud: job-webhook
   sessionAffinity: None
   type: ClusterIP
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    hypercloud: job-webhook
+  name: katib-tfjob-webhook-svc
+  namespace: kubeflow
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: webhook
+  selector:
+    hypercloud: job-webhook
+  sessionAffinity: None
+  type: ClusterIP

@@ -15,13 +15,7 @@ webhooks:
       port: 443
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: katib-job-webhook-svc.kubeflow.svc
-  namespaceSelector:
-    matchExpressions:
-    - key: job-webhook
-      operator: NotIn
-      values:
-      - "false"
+  name: katib-job-webhook-svc.kubeflow.svc  
   objectSelector: {}
   reinvocationPolicy: Never
   rules:
@@ -41,19 +35,13 @@ webhooks:
   - v1beta1
   clientConfig:
     service:
-      name: katib-job-webhook-svc
+      name: katib-tfjob-webhook-svc
       namespace: kubeflow
-      path: /api/webhook/add-annotation/job 
+      path: /api/webhook/add-annotation/tfjob 
       port: 443
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: katib-job-webhook-svc.kubeflow.svc
-  namespaceSelector:
-    matchExpressions:
-    - key: job-webhook
-      operator: NotIn
-      values:
-      - "false"
+  name: katib-tfjob-webhook-svc.kubeflow.svc  
   objectSelector: {}
   reinvocationPolicy: Never
   rules:
