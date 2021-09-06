@@ -8,6 +8,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/kubeflow/common v0.3.3-0.20210201092343-3fbe0ce98269
 	github.com/kubeflow/katib v0.11.1
+	github.com/kubeflow/tf-operator v1.0.1-rc.5.0.20210224195440-6d9ee3264d9f
 	github.com/lib/pq v1.10.0
 	k8s.io/api v0.20.5
 	k8s.io/apimachinery v0.20.5

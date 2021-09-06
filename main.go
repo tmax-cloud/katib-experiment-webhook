@@ -65,7 +65,12 @@ func serve(w http.ResponseWriter, r *http.Request, admit admitFunc) {
 
 func serveJob(w http.ResponseWriter, r *http.Request) {
 	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.TrialSpecAnnotationCheck)
+	serve(w, r, admission.JobAnnotationCheck)
+}
+
+func serveTFJob(w http.ResponseWriter, r *http.Request) {
+	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
+	serve(w, r, admission.TfjobAnnotationCheck)
 }
 
 func serveAudit(w http.ResponseWriter, r *http.Request) {
@@ -158,6 +163,7 @@ func main() {
 	//URI에 맞는 handler 함수 호출
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/webhook/add-annotation/job", serveJob)	
+	mux.HandleFunc("/api/webhook/add-annotation/tfjob", serveTFJob)
 	/*mux.HandleFunc("/api/webhook/inject/cronjob", serveSidecarInjectionForCj)*/
 
 	// HTTPS 서버 설정

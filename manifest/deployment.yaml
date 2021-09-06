@@ -29,7 +29,7 @@ spec:
       - env:
         - name: TZ
           value: Asia/Seoul
-        image: kitaeyoo777/job-webhook:test4
+        image: kitaeyoo777/tfjob-webhook:test1
         imagePullPolicy: Always
         name: katib-job-webhook
         ports:

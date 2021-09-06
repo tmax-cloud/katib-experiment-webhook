@@ -37,3 +37,35 @@ webhooks:
     scope: '*'
   sideEffects: None
   timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: katib-job-webhook-svc
+      namespace: kubeflow
+      path: /api/webhook/add-annotation/job 
+      port: 443
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: katib-job-webhook-svc.kubeflow.svc
+  namespaceSelector:
+    matchExpressions:
+    - key: job-webhook
+      operator: NotIn
+      values:
+      - "false"
+  objectSelector: {}
+  reinvocationPolicy: Never
+  rules:
+  - apiGroups:
+    - kubeflow.org
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - tfjobs
+    scope: '*'
+  sideEffects: None
+  timeoutSeconds: 10  

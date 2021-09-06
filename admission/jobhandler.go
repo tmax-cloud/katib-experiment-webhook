@@ -17,7 +17,7 @@ import (
 	v1 "k8s.io/api/batch/v1"
 )
 
-func TrialSpecAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+func JobAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 		reviewResponse := v1beta1.AdmissionResponse{}
 
 		fmt.Println("check for enter experiment handler")
