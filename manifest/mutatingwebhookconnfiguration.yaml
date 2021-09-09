@@ -35,25 +35,25 @@ webhooks:
   - v1beta1
   clientConfig:
     service:
-      name: katib-tfjob-webhook-svc
+      name: katib-pod-webhook-svc
       namespace: kubeflow
-      path: /api/webhook/add-annotation/tfjob 
+      path: /api/webhook/add-annotation/pod
       port: 443
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: katib-tfjob-webhook-svc.kubeflow.svc  
+  name: katib-pod-webhook-svc.kubeflow.svc  
   objectSelector: {}
   reinvocationPolicy: Never
   rules:
   - apiGroups:
-    - kubeflow.org
+    - ""
     apiVersions:
     - v1
     operations:
     - CREATE
     - UPDATE
     resources:
-    - tfjobs
+    - pods
     scope: '*'
   sideEffects: None
   timeoutSeconds: 10  

@@ -20,7 +20,7 @@ kind: Service
 metadata:
   labels:
     hypercloud: job-webhook
-  name: katib-tfjob-webhook-svc
+  name: katib-pod-webhook-svc
   namespace: kubeflow
 spec:
   ports:

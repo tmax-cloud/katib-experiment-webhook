@@ -18,6 +18,7 @@ import (
 )
 
 func JobAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
+		//job 정보 받아온다	
 		reviewResponse := v1beta1.AdmissionResponse{}
 
 		fmt.Println("check for enter experiment handler")
@@ -27,26 +28,26 @@ func JobAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 		if err := json.Unmarshal(ar.Request.Object.Raw, &job); err != nil {
 			return ToAdmissionResponse(err) //msg: error		
 		}
+		//job이 생성되는 namespace
 		jobns := job.ObjectMeta.Namespace
 
 		klog.Infof("job is created in ns : %s", jobns)
-	
+		
+		//job의 ownerreference
 		owners := job.GetOwnerReferences()
 
 		klog.Infof("job owner : %s", owners)
-		//jobKind := ""
-		//jobName := ""
-		// Search for Trial owner in object owner references
-		// Trial is owned object if kind = Trial kind and API version = Trial API version
+		
 
 		var patch []patchOps
 
+		// 삽입할 annotation
 		am := map[string]string{
 			"sidecar.istio.io/inject": "false",			
 		}
 
 		jobName := ""
-
+		//ownerreference의 kind가 tfjob or pytorchjob인 pod 선택해서 이름 가져온다.
 		for _, owner := range owners {
 			if owner.Kind == "Trial" && owner.APIVersion == "kubeflow.org/v1beta1" {
 				jobName = job.GetName()
@@ -54,7 +55,7 @@ func JobAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 		}
 		
 		klog.Infof("job name : %s", jobName)
-
+		//해당하는 job의 podtemplate annotation 삽입
 		if jobName != "" {
 			createPatch(&patch, "add", "/spec/template/metadata/annotations", am)
 		}

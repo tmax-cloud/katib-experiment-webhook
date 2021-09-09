@@ -68,10 +68,11 @@ func serveJob(w http.ResponseWriter, r *http.Request) {
 	serve(w, r, admission.JobAnnotationCheck)
 }
 
-func serveTFJob(w http.ResponseWriter, r *http.Request) {
+func servePod(w http.ResponseWriter, r *http.Request) {
 	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.TfjobAnnotationCheck)
+	serve(w, r, admission.PodAnnotationCheck)
 }
+
 
 func serveAudit(w http.ResponseWriter, r *http.Request) {
 	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
@@ -97,39 +98,6 @@ func serveAuditWss(w http.ResponseWriter, r *http.Request) {
 	audit.ServeWss(w, r)
 }
 
-func serveSidecarInjectionForPod(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForPod)
-}
-func serveSidecarInjectionForDeploy(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForDeploy)
-}
-func serveSidecarInjectionForRs(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForRs)
-}
-func serveSidecarInjectionForSts(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForSts)
-}
-func serveSidecarInjectionForDs(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForDs)
-}
-func serveSidecarInjectionForCj(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForCj)
-}
-func serveSidecarInjectionForJob(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForJob)
-}
-func serveSidecarInjectionForTest(w http.ResponseWriter, r *http.Request) {
-	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
-	serve(w, r, admission.InjectionForTest)
-}
-
 func serveTest(w http.ResponseWriter, r *http.Request) {
 	klog.Infof("Http request: method=%s, uri=%s", r.Method, r.URL.Path)
 	var body []byte
@@ -150,8 +118,7 @@ var (
 func main() {
 	flag.IntVar(&port, "port", 8443, "ai_devops-experiment-webhook server port")
 	flag.StringVar(&certFile, "certFile", "/run/secrets/tls/tls.crt", "ai_devops-experiment-webhook server cert")
-	flag.StringVar(&keyFile, "keyFile", "/run/secrets/tls/tls.key", "x509 Private key file for TLS connection")
-	flag.StringVar(&admission.SidecarContainerImage, "sidecarImage", "fluent/fluent-bit:1.5-debug", "Fluent-bit image name.")
+	flag.StringVar(&keyFile, "keyFile", "/run/secrets/tls/tls.key", "x509 Private key file for TLS connection")	
 	flag.Parse()
 
 	//crt, key를 불러와 변수에 저장
@@ -162,8 +129,8 @@ func main() {
 
 	//URI에 맞는 handler 함수 호출
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/webhook/add-annotation/job", serveJob)	
-	mux.HandleFunc("/api/webhook/add-annotation/tfjob", serveTFJob)
+	mux.HandleFunc("/api/webhook/add-annotation/job", serveJob)		
+	mux.HandleFunc("/api/webhook/add-annotation/pod", servePod)
 	/*mux.HandleFunc("/api/webhook/inject/cronjob", serveSidecarInjectionForCj)*/
 
 	// HTTPS 서버 설정
