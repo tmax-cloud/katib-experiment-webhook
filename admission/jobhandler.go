@@ -47,7 +47,7 @@ func JobAnnotationCheck(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 		}
 
 		jobName := ""
-		//ownerreference의 kind가 tfjob or pytorchjob인 pod 선택해서 이름 가져온다.
+		//ownerreference의 kind가 trial인 job 선택해서 이름 가져온다.
 		for _, owner := range owners {
 			if owner.Kind == "Trial" && owner.APIVersion == "kubeflow.org/v1beta1" {
 				jobName = job.GetName()
