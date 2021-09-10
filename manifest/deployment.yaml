@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   generation: 1
   labels:
-    hypercloud: job-webhook
-  name: katib-job-webhook
+    hypercloud: annotation-inject
+  name: annotation-injector-for-katib
   namespace: kubeflow
 spec:
   progressDeadlineSeconds: 600
@@ -12,7 +12,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      hypercloud: job-webhook
+      hypercloud: annotation-inject
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -22,16 +22,16 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        hypercloud: job-webhook
+        hypercloud: annotation-inject
     spec:
-      serviceAccountName: katib-job-reader
+      serviceAccountName: katib-resource-reader
       containers:
       - env:
         - name: TZ
           value: Asia/Seoul
         image: kitaeyoo777/katib-anno-webhook:v1.0.0
         imagePullPolicy: Always
-        name: katib-job-webhook
+        name: annotation-injector-for-katib
         ports:
         - containerPort: 8443
           name: webhook
@@ -47,7 +47,7 @@ spec:
         terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /run/secrets/tls
-          name: katib-job-webhook-tls
+          name: annotation-injector-for-katib-tls
           readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -55,7 +55,7 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: katib-job-webhook-tls
+      - name: annotation-injector-for-katib-tls
         secret:
           defaultMode: 420
-          secretName: katib-job-webhook-tls
+          secretName: annotation-injector-for-katib-tls

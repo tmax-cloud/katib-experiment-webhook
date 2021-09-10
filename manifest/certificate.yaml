@@ -1,21 +1,21 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: katib-job-webhook-cert
+  name: annotation-injector-for-katib-cert
   namespace: kubeflow
   labels:
     some-annotation: "true"
 spec:
-  secretName: katib-job-webhook-tls
+  secretName: annotation-injector-for-katib-tls
   duration: 2880h
   renewBefore: 360h
   dnsNames:
-    - katib-job-webhook-svc.kubeflow.svc
-    - katib-job-webhook-svc.kubeflow.svc.cluster.local    
-    - katib-job-webhook-svc   
-    - katib-pod-webhook-svc.kubeflow.svc
-    - katib-pod-webhook-svc.kubeflow.svc.cluster.local    
-    - katib-pod-webhook-svc     
+    - annotation-injector-for-pod-svc.kubeflow.svc
+    - annotation-injector-for-pod-svc.kubeflow.svc.cluster.local    
+    - annotation-injector-for-pod-svc  
+    - annotation-injector-for-job-svc.kubeflow.svc
+    - annotation-injector-for-job-svc.kubeflow.svc.cluster.local    
+    - annotation-injector-for-job-svc   
   privateKey:
     algorithm: RSA
     encoding: PKCS1

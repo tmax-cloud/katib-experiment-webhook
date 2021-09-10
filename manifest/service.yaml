@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    hypercloud: job-webhook
-  name: katib-job-webhook-svc
+    hypercloud: annotation-inject
+  name: annotation-injector-for-job-svc
   namespace: kubeflow
 spec:
   ports:
@@ -11,7 +11,7 @@ spec:
     protocol: TCP
     targetPort: webhook
   selector:
-    hypercloud: job-webhook
+    hypercloud: annotation-inject
   sessionAffinity: None
   type: ClusterIP
 ---
@@ -19,8 +19,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    hypercloud: job-webhook
-  name: katib-pod-webhook-svc
+    hypercloud: annotation-inject
+  name: annotation-injector-for-pod-svc
   namespace: kubeflow
 spec:
   ports:
@@ -28,6 +28,6 @@ spec:
     protocol: TCP
     targetPort: webhook
   selector:
-    hypercloud: job-webhook
+    hypercloud: annotation-inject
   sessionAffinity: None
   type: ClusterIP

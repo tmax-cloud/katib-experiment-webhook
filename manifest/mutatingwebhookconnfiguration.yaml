@@ -1,21 +1,21 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: katib-job-webhook-mutator
+  name: annotation-injector-for-katib
   annotations:
-    cert-manager.io/inject-ca-from: kubeflow/katib-job-webhook-cert
+    cert-manager.io/inject-ca-from: kubeflow/annotation-injector-for-katib-cert
 webhooks:
 - admissionReviewVersions:
   - v1beta1
   clientConfig:
     service:
-      name: katib-job-webhook-svc
+      name: annotation-injector-for-job-svc
       namespace: kubeflow
       path: /api/webhook/add-annotation/job 
       port: 443
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: katib-job-webhook-svc.kubeflow.svc  
+  name: annotation-injector-for-job-svc.kubeflow.svc  
   objectSelector: {}
   reinvocationPolicy: Never
   rules:
@@ -35,13 +35,13 @@ webhooks:
   - v1beta1
   clientConfig:
     service:
-      name: katib-pod-webhook-svc
+      name: annotation-injector-for-pod-svc
       namespace: kubeflow
       path: /api/webhook/add-annotation/pod
       port: 443
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: katib-pod-webhook-svc.kubeflow.svc  
+  name: annotation-injector-for-pod-svc.kubeflow.svc  
   objectSelector: {}
   reinvocationPolicy: Never
   rules:
