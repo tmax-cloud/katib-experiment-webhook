@@ -29,7 +29,7 @@ spec:
       - env:
         - name: TZ
           value: Asia/Seoul
-        image: kitaeyoo777/katib-anno-webhook:v1.0.0
+        image: tmaxcloudck/katib-annotation-injector:b0.0.1 
         imagePullPolicy: Always
         name: annotation-injector-for-katib
         ports:
